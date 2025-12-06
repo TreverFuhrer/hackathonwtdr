@@ -14,3 +14,6 @@ This project cleans and structures raw robot sensor data (temperature, vibration
 
 ## Results
 Transparent dataset with 150 rows, ready for analysis and presentation.
+
+# Executable code to run Sensor.py
+C:\Hackathon\.venv\Scripts\python.exe Clean_Sensor_Reading.py
