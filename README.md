@@ -45,5 +45,28 @@ After cleaning and validating the sensor dataset, we calculate performance metri
 - **Mechanical stability** → Are vibration spikes rare or frequent?  
 - **Orientation control** → Are axis angles consistent or erratic?
 
+## System Alerts
+
+The system alerts module automatically scans the cleaned sensor dataset and raises warnings when performance metrics exceed safe thresholds. This ensures the robot can self‑diagnose issues and notify operators in real time.
+
+### Alert Rules
+- **Temperature**
+  - ⚠️ Triggered if `Temperature_C > 50 °C` (overheating).
+  - ⚠️ Triggered if `Temperature_C < 10 °C` (abnormally cold or sensor error).
+- **Vibration**
+  - ⚠️ Triggered if `Vibration_g > 0.3 g` (mechanical instability).
+- **Orientation**
+  - ⚠️ Triggered if any axis (`Axis1_deg`, `Axis2_deg`, `Axis3_deg`) exceeds 60° (unsafe tilt).
+- **Data Quality**
+  - ⚠️ Triggered if more than 5% of values are missing in the dataset.
+
+### Example Output
+If thresholds are breached: === System Alerts === ⚠️ Axis1_deg exceeded safe orientation range (>60°) ⚠️ More than 5% missing values in dataset
+If all readings are safe: === System Alerts === ✅ All systems stable
+
+### Purpose
+System alerts provide immediate feedback on robot health and data integrity. They make the pipeline production‑ready by ensuring unsafe conditions are flagged before further analysis or deployment.
+
+
 ### Output
 The script prints a summary report in the console and can export results to CSV/Excel. This makes it easy to compare raw vs. cleaned data and demonstrate improvements in reliability.
