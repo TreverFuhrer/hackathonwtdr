@@ -1,0 +1,19 @@
+Total events: 20
+Missing timestamps: 0
+Missing error_code: 0
+Missing axis: 0
+Coverage ratio: 100.00%
+
+Severity counts:
+  low: 9
+  medium: 6
+  high: 3
+  critical: 2
+
+Collision type counts:
+  torque_limit: 6
+  path_singularity: 5
+  overtravel: 3
+  safety_fence: 2
+  hard_impact: 2
+  emergency_stop: 2

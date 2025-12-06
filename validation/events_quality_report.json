@@ -1,0 +1,21 @@
+{
+  "total_events": 20,
+  "missing_timestamps": 0,
+  "missing_error_code": 0,
+  "missing_axis": 0,
+  "severity_counts": {
+    "low": 9,
+    "medium": 6,
+    "high": 3,
+    "critical": 2
+  },
+  "collision_type_counts": {
+    "torque_limit": 6,
+    "path_singularity": 5,
+    "overtravel": 3,
+    "safety_fence": 2,
+    "hard_impact": 2,
+    "emergency_stop": 2
+  },
+  "coverage_ratio": 1.0
+}
