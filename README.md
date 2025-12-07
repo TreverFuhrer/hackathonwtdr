@@ -85,8 +85,8 @@ The maintenance notes module converts system alerts into actionable recommendati
 ### Example Output
 If issues are detected:
 
-Documentation:
-
+**Documentation:
+**
 Document of Data Cleaning Decisions: 
 [Hackathon 2025, Document your data cleaning decisions .pdf](https://github.com/user-attachments/files/24017416/Hackathon.2025.Document.your.data.cleaning.decisions.pdf)
 
