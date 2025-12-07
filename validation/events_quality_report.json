@@ -2,12 +2,11 @@
   "total_events": 20,
   "missing_timestamps": 0,
   "missing_error_code": 0,
-  "missing_axis": 0,
+  "missing_axis": 2,
   "severity_counts": {
-    "low": 9,
-    "medium": 6,
-    "high": 3,
-    "critical": 2
+    "low": 13,
+    "high": 4,
+    "medium": 3
   },
   "collision_type_counts": {
     "torque_limit": 6,
@@ -17,5 +16,11 @@
     "hard_impact": 2,
     "emergency_stop": 2
   },
-  "coverage_ratio": 1.0
+  "confidence_flag_counts": {
+    "medium": 13,
+    "inferred": 7
+  },
+  "force_value_out_of_range": 0,
+  "force_value_missing": 2,
+  "coverage_ratio_timestamp_and_error": 1.0
 }

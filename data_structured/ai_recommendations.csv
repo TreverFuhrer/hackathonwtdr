@@ -1,67 +1,51 @@
 event_id,axis,severity,collision_type,diagnosis,inspection_steps,maintenance_actions,safety_clearance,return_to_service
-9,1,high,hard_impact,"High‑severity hard impact at joint J1 with concurrent high‑temperature alert immediately after joint calibration, indicating potential thermal stress, motor overload, or post‑maintenance misalignment.","- Inspect J1 motor housing and cabling for heat discoloration or impact deformation
-- Check J1 thermal sensors for drift or loose connections
-- Verify J1 torque sensor readings for post‑impact offsets
-- Examine reducer and bearing set for shock-induced play or abnormal noise
-- Review controller logs for temperature spikes or current surges around the event","- Recalibrate J1 motor temperature sensor and validate against reference probe
-- Perform J1 joint backlash and smooth‑motion test under low load
-- Apply fresh lubrication to J1 reducer if temperature caused viscosity breakdown
-- Tighten or realign J1 mechanical interfaces if impact shifted calibration
-- Run a controlled torque profile test to confirm normal thermal rise","- Lock out power and engage mechanical joint support
-- Allow J1 motor assembly to cool to safe handling temperature
-- Verify no secondary damage to adjacent harnesses or panels
-- Confirm area free of residual collision hazards before energizing","- Complete thermal stability check during a 10‑minute idle cycle
-- Validate joint path accuracy and torque response under supervised motion
-- Clear collision and temperature alerts and recheck sensor baselines
-- Approve full operation only after completing impact recovery checklist"
-13,1,high,hard_impact,"High‑severity hard impact recorded at Joint 1 immediately after joint calibration, indicating probable mechanical shock to the J1 drive train or misalignment introduced during calibration.","- Inspect J1 joint housing for deformation, cracks, or shifted mounting surfaces
-- Check J1 motor flange, gearbox interface, and torque-sensor mounting for mechanical looseness
-- Review post-calibration offsets for J1 to confirm no erroneous zero-point shift occurred
-- Verify wiring harness and connector integrity around J1 for strain or partial pull-out
-- Examine robot workcell for external obstructions or unexpected contact at time of event","- Recalibrate J1 with a controlled sequence to confirm proper zero and torque baselines
-- Torque‑check J1 mechanical fasteners (motor, gearbox, coupling)
-- Perform a slow‑speed motion test under observation to validate smooth rotation and torque profile
-- If abnormal torque persists, perform advanced diagnostics on J1 gearbox and motor bearings","- Lock out robot power and secure energy sources before inspection
-- Physically block robot arm to prevent unintended rotation of J1
-- Confirm workcell free of external objects that may have caused the impact","- Validate J1 torque telemetry during low‑speed and nominal‑speed test cycles
-- Ensure no repeated collision flags in a controlled dry run
-- Document calibration results and restore robot to full operation only after confirming stable torque and alignment"
-14,6,high,emergency_stop,High‑severity emergency stop triggered at Joint 6. Torque level indicates abrupt halt but no repeated pattern. Likely operator-initiated E-stop; verify no mechanical obstruction or wiring fault at J6.,"- Inspect J6 cabling and connectors for damage or pinching
-- Verify E-stop circuitry integrity, including buttons and wiring
-- Check J6 brake response and confirm no residual torque or binding
-- Review robot logs for any pre-stop anomalies","- Reset and test E-stop chain functionality
-- Lubricate and manually articulate J6 to confirm smooth movement
-- Run joint torque sensor calibration check
-- Clear any debris or obstruction around J6 work envelope","- Confirm E-stop system passes full functional test
-- Ensure no personnel or object intrusion zones triggered the stop
-- Validate controller fault logs show no unresolved safety faults","- Perform low-speed J6 motion test cycle
-- Run full robot homing and safety validation routine
-- Approve return only if all torque, brake, and E-stop checks pass"
-19,5,critical,emergency_stop,"Critical emergency stop triggered during high torque load on Joint 5 immediately after motor replacement, indicating possible installation issue, wiring fault, or unintended external activation.","- Verify E-stop button condition and rule out accidental operator activation
-- Inspect J5 motor installation for alignment, mounting torque, and connector seating
-- Check post-maintenance wiring harness for pinched, loose, or misrouted cables
-- Review controller logs for simultaneous faults or overcurrent events
-- Manually rotate J5 (powered-off) to confirm absence of mechanical binding","- Reseat and torque-check J5 motor mounting hardware
-- Reinspect and, if necessary, reterminate J5 motor and encoder connectors
-- Perform continuity and insulation tests on E-stop circuit and J5 wiring
-- Run low-speed, low-load functional test on J5 to validate torque behavior
-- Update maintenance record with findings from the immediate post-replacement event","- Lock out and tag out all power sources prior to inspection
-- Verify E-stop circuit integrity before re-energizing
-- Confirm no personnel are within robot reach zone during functional tests","- Complete full joint motion test across full range at increasing speeds
-- Validate torque readings remain within nominal thresholds
-- Clear all fault logs and confirm no recurrence over multiple cycles
-- Authorize system restart only after supervisor review of test results"
-20,6,critical,torque_limit,"Joint 6 exceeded torque limits at a critical level, indicating potential mechanical binding, worn bearings, or obstruction despite recent sensor cleaning.","- Manually verify J6 for mechanical resistance or abnormal stiffness
-- Inspect J6 wiring, connectors, and torque sensor harness for damage
-- Check for foreign objects or debris around the J6 rotary interface
-- Review recent motion logs for patterns of overload or unexpected stops","- Lubricate J6 rotational components and verify bearing condition
-- Perform torque sensor calibration for J6
-- Realign and re-torque J6 fasteners to manufacturer specs
-- Remove any obstructions and clear workspace paths
-- If binding persists, schedule partial disassembly of J6 drivetrain","- Lockout/tagout robot power before inspection
-- Physically secure end-effector to prevent unexpected motion
-- Confirm zero-energy state of all axes before manual manipulation
-- Maintain exclusion zone until torque integrity is verified","- Run J6 no-load motion test across full range
-- Perform torque profile verification at low, medium, and nominal loads
-- Validate collision detection thresholds and confirm no abnormal spikes
-- Approve restart only after stable torque readings and smooth motion are confirmed"
+9,1,high,hard_impact,"High‑severity hard impact at Joint 1 combined with elevated temperature indicates possible motor overload, thermal stress, or emerging bearing/motor driver degradation immediately after calibration.","- Verify Joint 1 motor temperature against nominal operating range
+- Inspect J1 housing, cabling, and connectors for heat discoloration or mechanical deformation
+- Check post‑calibration offsets for drift caused by impact
+- Review torque logs before and after the event for abnormal spikes
+- Manually rotate J1 (power-off) to assess for roughness or binding","- Perform detailed thermal inspection of J1 motor and driver module
+- Re-run full J1 calibration and compare results to baseline
+- Lubricate or replace J1 bearing assembly if friction is detected
+- Validate cooling airflow or liquid‑cooling channels for blockage
+- Clear any debris or mechanical interference around J1 work envelope","- Lock out and tag out robot before contact inspection
+- Allow motor to cool to safe-handling temperature
+- Verify no residual stored energy on J1 drive
+- Confirm collision zone is clear of obstructions before functional testing","- Perform low‑speed J1 motion test and confirm stable temperature rise profile
+- Validate torque behavior under nominal load
+- Run collision‑avoidance sensor self‑test
+- Approve return to operation only after temperatures and torque readings remain stable for one full duty cycle"
+13,1,high,hard_impact,"High‑severity hard impact on J1 immediately after joint calibration indicates probable mechanical shock to the base axis, with risk of encoder offset, bearing preload shift, or mounting surface disturbance.","- Power down and engage lockout/tagout
+- Visually inspect J1 housing, base casting, and cable routing for impact marks or deformation
+- Check J1 mechanical backlash and verify brake holding torque
+- Inspect encoder coupling and confirm zero-position alignment
+- Review internal collision logs for torque spike patterns","- Perform J1 encoder re-homing and compare with pre-calibration reference
+- Re-torque J1 mounting bolts to manufacturer specifications
+- Lubricate J1 bearing surfaces if intervals allow post-impact servicing
+- Run J1 motion test at reduced speed to detect abnormal vibration or increased motor current
+- If misalignment > acceptable threshold, perform full J1 axis recalibration","- Confirm no structural cracks or loosened hardware
+- Validate encoder readings remain stable across full J1 sweep
+- Ensure torque values normalize during test cycles
+- Supervisor sign-off required due to high-severity event","- Resume operation at 50% speed for first verification cycle
+- Monitor torque and current trends for minimum 30 minutes runtime
+- If no anomalies occur, restore full duty cycle and log event resolution"
+14,1,high,emergency_stop,Repeated high‑severity emergency stops at J1 within 24 hours suggest human-triggered safety intervention or abnormal motion at the joint immediately after calibration.,"- Verify E-stop button condition and rule out mechanical sticking
+- Inspect J1 cabling, connectors, and harness routing for drag or snag points
+- Review motion logs for abnormal J1 acceleration or unexpected command inputs","- Recalibrate J1 torque/position limits to confirm post-maintenance integrity
+- Test J1 motion at reduced speed to detect binding or overshoot
+- Update E-stop circuit check and confirm correct reset behavior","- Confirm no physical obstructions in J1 workspace
+- Validate E-stop system electrical integrity via panel test
+- Ensure operators understand reset procedure and recent maintenance status","- Perform supervised trial cycle at low speed
+- Monitor torque trace for stability and absence of spikes
+- Approve full-speed operation only after three clean cycles with no additional stops"
+19,1,high,emergency_stop,High-severity emergency stop on J1 with elevated torque load suggests abrupt external interference or operator-triggered E-stop during active motion; potential transient joint stress despite recent calibration.,"- Inspect J1 mechanical housing for impact marks or misalignment
+- Verify encoder feedback consistency on J1 following the E-stop
+- Check cable harness and connector integrity at J1
+- Review E-stop button logs to confirm if manually activated
+- Inspect surrounding workspace for obstructions or foreign objects","- Perform J1 torque sensor health check and compare against post-calibration baselines
+- Re-run joint homing and verify repeatability
+- Re-seat or replace any loose or damaged connectors at J1
+- Update incident record with observed physical or electrical anomalies","- Validate E-stop circuit continuity and correct reset behavior
+- Confirm workspace is clear of operators and obstructions
+- Ensure robot controller reports no additional safety faults","- Execute slow-speed motion test on J1 under supervision
+- Verify torque values remain within expected ranges during motion
+- Approve full-speed operation only after stable performance is confirmed"

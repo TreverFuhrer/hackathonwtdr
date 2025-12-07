@@ -10,50 +10,53 @@ AXIS_PATTERN = re.compile(r"(axis|joint)\s*(\d+)", re.IGNORECASE)
 
 
 def parse_maintenance_notes() -> pd.DataFrame:
-    rows = []
+    rows: list[dict] = []
     with MAINT_NOTES_FILE.open("r", encoding="utf-8") as f:
         for line in f:
             raw = line.strip()
             if not raw:
                 continue
 
-            # Example: "2025-11-19 - Replaced motor on axis 3."
-            # Split on first "-" or "–"
-            parts = re.split(r"\s[-–]\s", raw, maxsplit=1)
-            if len(parts) == 2:
-                date_str, rest = parts
-            else:
-                date_str, rest = None, raw
+            status = "valid"
+            notes: list[str] = []
 
-            dt = None
-            if date_str:
-                try:
-                    dt = dateparser.parse(date_str).date()
-                except Exception:
-                    dt = None
+            # Expect something like "2025-11-19 - Replaced motor on axis 3"
+            if " - " in raw:
+                date_str, rest = raw.split(" - ", 1)
+            else:
+                date_str, rest = raw, ""
+                status = "partial_missing"
+                notes.append("Missing ' - ' separator; note body may be incomplete")
+
+            try:
+                dt = dateparser.parse(date_str).date()
+            except Exception:
+                dt = None
+                status = "partial_missing"
+                notes.append("Could not parse date in maintenance note")
 
             axis = None
-            m = AXIS_PATTERN.search(rest)
-            if m:
-                try:
-                    axis = int(m.group(2))
-                except ValueError:
-                    axis = None
+            m_axis = AXIS_PATTERN.search(rest)
+            if m_axis:
+                axis = int(m_axis.group(2))
+            else:
+                notes.append("Axis/joint not identified in note")
 
-            task_type = None
-            lower = rest.lower()
-            if "replace" in lower and "motor" in lower:
+            text_lower = rest.lower()
+            if "replace" in text_lower and "motor" in text_lower:
                 task_type = "replace_motor"
-            elif "lubric" in lower:
+            elif "lubricat" in text_lower:
                 task_type = "lubricate_axis"
-            elif "belt" in lower:
+            elif "belt" in text_lower:
                 task_type = "check_belts"
-            elif "sensor" in lower:
+            elif "sensor" in text_lower and "clean" in text_lower:
                 task_type = "clean_sensors"
-            elif "wire" in lower:
+            elif "wiring" in text_lower or "cable" in text_lower:
                 task_type = "inspect_wiring"
-            elif "calib" in lower:
+            elif "calibrat" in text_lower or "zero" in text_lower:
                 task_type = "calibrate_joints"
+            else:
+                task_type = "other"
 
             rows.append(
                 {
@@ -61,6 +64,8 @@ def parse_maintenance_notes() -> pd.DataFrame:
                     "axis": axis,
                     "task_type": task_type,
                     "note_raw": rest,
+                    "status": status,
+                    "notes": "; ".join(notes) if notes else "",
                 }
             )
 
