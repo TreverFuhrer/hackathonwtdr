@@ -243,7 +243,7 @@ def main():
     col3.metric("AI Recommendations", len(recs) if not recs.empty else 0)
 
     st.subheader("Event Log")
-    st.dataframe(events, use_container_width=True)
+    st.dataframe(events, width=True)
 
     # Event Viewer
     st.divider()
