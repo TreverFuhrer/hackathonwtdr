@@ -89,6 +89,7 @@ def load_data():
 
     return events, recs
 
+# make prompt for gpt 5.1
 def build_prompt(row):
     fields = {
         "event_id": int(row.get("event_id", -1)),
@@ -199,14 +200,14 @@ def run_ai_analysis(events, endpoint, api_key, deployment):
 
 def main():
     st.set_page_config(page_title="CSI Bot Diagnostic", layout="wide")
-    st.title("🤖 CSI Hackathon: Robot Diagnostic Tool")
+    st.title("CSI Hackathon: Robot Diagnostic Tool")
 
-    # Load Env Vars up front so they are ready for the pipeline button
+    # Load Env Vars
     default_endpoint = os.getenv("AZURE_OPENAI_ENDPOINT", "")
     default_api_key = os.getenv("AZURE_OPENAI_API_KEY", "")
     default_deployment = os.getenv("AZURE_OPENAI_DEPLOYMENT", "gpt-4o")
 
-    # Sidebar: File IO
+    # Sidebar
     st.sidebar.header("1. Data Ingestion")
     uploaded_files = st.sidebar.file_uploader(
         "Upload Logs/CSVs",
@@ -218,30 +219,26 @@ def main():
         saved_paths = save_uploaded_files(uploaded_files)
         st.sidebar.success(f"Loaded {len(saved_paths)} files.")
 
-    # CHANGED: "Run Full Pipeline" now triggers ETL -> then AI automatically
     if st.sidebar.button("Run Full Pipeline (ETL + AI)"):
-        # 1. Run Data Parsing
         with st.spinner("Parsing logs and building event history..."):
             run_pipeline_main()
         
-        # 2. Automatically Run AI (if keys exist)
         if default_api_key:
             with st.spinner("Pipeline finished. Now generating AI maintenance plans..."):
-                # We need to reload events from disk because run_pipeline_main just updated them
                 fresh_events = pd.read_csv(EVENTS_FILE)
                 run_ai_analysis(fresh_events, default_endpoint, default_api_key, default_deployment)
             st.sidebar.success("Done! Events & AI Plans generated.")
         else:
             st.sidebar.warning("ETL finished, but skipped AI (Missing API Key).")
 
-    # Main Area
+    # Load Data
     events, recs = load_data()
 
     if events.empty:
         st.warning("⚠️ No event data found. Please upload files and run the pipeline.")
         return
 
-    # Top level metrics
+    # Metrics
     col1, col2, col3 = st.columns(3)
     col1.metric("Total Events", len(events))
     
@@ -254,18 +251,59 @@ def main():
     col3.metric("AI Recommendations", len(recs) if not recs.empty else 0)
 
     st.subheader("Event Log")
-    # Updated to width="stretch" per recent Streamlit warning
     st.dataframe(events, width="stretch")
 
-    # Event Viewer
     st.divider()
     st.subheader("Deep Dive & AI Analysis")
     
-    # Select event ID
+    # Critical Alert Buttons
     if not events.empty:
+        # 1. Initialize session state
+        if "selected_event_id" not in st.session_state:
+            st.session_state["selected_event_id"] = sorted(events["event_id"].unique())[0]
+
+        # 2. Find Critical/High events
+        if "severity" in events.columns:
+            crit_events = events[events['severity'].str.lower() == 'critical']
+            # use high if no criticals found
+            if crit_events.empty:
+                 crit_events = events[events['severity'].str.lower() == 'high']
+        else:
+            crit_events = pd.DataFrame()
+
+        # 3. Render Buttons in a nice container
+        if not crit_events.empty:
+            st.markdown("### 🚨 Critical Alerts")
+            st.caption("Quickly jump to the most severe events:")
+            
+            # put them in a container with a border so it looks like a control panel
+            with st.container(border=True):
+                cols_per_row = 4
+                for i in range(0, len(crit_events), cols_per_row):
+                    chunk = crit_events.iloc[i:i+cols_per_row]
+                    cols = st.columns(cols_per_row)
+                    for idx, (_, row) in enumerate(chunk.iterrows()):
+                        e_id = int(row['event_id'])
+                        axis = row.get('axis', '?')
+                        with cols[idx]:
+                            label = f"⚠️ Event {e_id} (Axis {axis})"
+                            if st.button(label, key=f"btn_{e_id}", type="primary", use_container_width=True):
+                                st.session_state["selected_event_id"] = e_id
+
+        # 4. Dropdown part
         all_ids = sorted(events["event_id"].unique())
-        selected_id = st.selectbox("Select Event ID", all_ids)
+        if st.session_state["selected_event_id"] not in all_ids:
+            st.session_state["selected_event_id"] = all_ids[0]
+
+        selected_id = st.selectbox(
+            "Select Event ID", 
+            all_ids,
+            key="selected_event_id"
+        )
         
+        # ---------------------------------------------------------
+        # Display all the Details
+        # ---------------------------------------------------------
         col_left, col_right = st.columns([1, 1])
 
         with col_left:
@@ -282,7 +320,6 @@ def main():
         with col_right:
             st.markdown(f"#### 🧠 AI Maintenance Plan")
             
-            # Check if we already have a rec for this ID
             current_rec = pd.DataFrame()
             if not recs.empty:
                 current_rec = recs[recs["event_id"] == selected_id]
@@ -299,7 +336,7 @@ def main():
             else:
                 st.info("No AI analysis generated for this event yet.")
     
-    # Azure Config Section (Bottom)
+    # Azure Config Section
     st.divider()
     with st.expander("⚙️ Admin / Manual API Override"):
         c1, c2, c3 = st.columns(3)
@@ -307,7 +344,6 @@ def main():
         api_key = c2.text_input("Key", type="password", value=default_api_key)
         deployment = c3.text_input("Deployment", value=default_deployment)
 
-        # Kept this button just in case you want to re-run ONLY the AI without parsing logs again
         if st.button("Re-generate AI Plans (Manual)"):
             if not api_key:
                 st.error("Need API Key!")
